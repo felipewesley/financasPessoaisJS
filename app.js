@@ -50,6 +50,10 @@ function cadastrarDespesa() {
         console.log(`Não foi possível criar o objeto. \n${e}`); 
         return null; 
     }
-    // console.log(despesa); 
-    return despesa; 
+    
+    return gravar(despesa); 
+}
+
+function gravar(d) {
+    localStorage.setItem('despesa', JSON.stringify(d)); 
 }
