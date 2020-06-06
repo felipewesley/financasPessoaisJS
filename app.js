@@ -9,6 +9,25 @@ class Despesa {
     }
 }
 
+class Database {
+    constructor() {
+        let id = localStorage.getItem('id'); 
+        
+        if(id === null){
+            localStorage.setItem('id', 0); 
+        }
+    }
+    getNextId() {
+        let nextId = localStorage.getItem('id'); 
+        return parseInt(nextId) + 1; 
+    }
+    gravar(d) {
+        let id = this.getNextId(); 
+        localStorage.setItem('id', id); 
+        return localStorage.setItem(id, JSON.stringify(d)); 
+    }
+}
+
 function isNumeric (...dados) {    
     if (dados.length > 0) {
         for(const e in dados) {
@@ -20,6 +39,8 @@ function isNumeric (...dados) {
     }
     return true;
 }
+
+const bd = new Database(); 
 
 function cadastrarDespesa() {
     
@@ -51,9 +72,5 @@ function cadastrarDespesa() {
         return null; 
     }
     
-    return gravar(despesa); 
-}
-
-function gravar(d) {
-    localStorage.setItem('despesa', JSON.stringify(d)); 
+    return bd.gravar(despesa); 
 }
