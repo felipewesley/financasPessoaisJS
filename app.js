@@ -5,14 +5,14 @@ class Despesa {
         this.status = true; 
 
         if (!this.validarInformacoes(tipo, descricao, valor)) {
-            this.setStatus(false)
+            this.setStatus(false); 
             return false; 
         }
 
         let data = this.validarData(dia, mes, ano); 
         
         if (!data){
-            this.setStatus(false)
+            this.setStatus(false); 
             return false; 
         }
 
