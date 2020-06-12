@@ -130,22 +130,50 @@ function cadastrarDespesa() {
     
     let despesa = new Despesa(dia.value, mes.value, ano.value, tipo.value, descricao.value, valor.value); 
     
+    // Informações do modal que serão alteradas de acordo com o status da operação
+    let titleClassModal; 
+    let titleModal; 
+    let contentModal; 
+    let btnClass; 
+    let btnContent; 
+
     if(!despesa.getStatus()) {
         
-        return $('#erroCadastro').modal('show'); 
+        titleClassModal = 'modal-header text-danger'; 
+        titleModal = '<p> Erro ao cadastrar a despesa </p>'; 
+        contentModal = '<p> Um ou mais campos obrigatórios não foram preenchidos.  </p>'; 
+        btnClass = 'btn btn-danger'; 
+        btnContent = 'Voltar e corrigir'; 
         
     } else if (!despesa.validarData(dia.value, mes.value, ano.value)) {
 
-        return $('#alertaData').modal('show'); 
+        titleClassModal = 'modal-header text-primary'; 
+        titleModal = '<p> Atenção! </p>'; 
+        contentModal = '<p> A data informada não é válida.  </p>'; 
+        btnClass = 'btn btn-primary'; 
+        btnContent = 'Corrigir'; 
 
     } else {
 
         let elements = [dia, mes, ano, tipo, descricao, valor]; 
         elements.forEach(e => e.value = ''); 
+
+        titleClassModal = 'modal-header text-success'; 
+        titleModal = '<p> Concluído! </p>'; 
+        contentModal = '<p> Despesa cadastrada com sucesso.  </p>'; 
+        btnClass = 'btn btn-success'; 
+        btnContent = 'Concluído'; 
         
         bd.gravar(despesa); 
 
-        return $('#sucessoCadastro').modal('show'); 
     }
+
+    document.getElementById('ModalHeader').className = titleClassModal; 
+    document.getElementById('ModalLabel').innerHTML = titleModal; 
+    document.getElementById('ModalContent').innerHTML = contentModal; 
+    document.getElementById('ModalBtn').className = btnClass; 
+    document.getElementById('ModalBtn').innerHTML = btnContent; 
+
+    return $('#alertaRegistro').modal('show'); 
     
 }
