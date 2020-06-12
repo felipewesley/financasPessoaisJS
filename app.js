@@ -12,7 +12,7 @@ class Despesa {
         let data = this.validarData(dia, mes, ano); 
         
         if (!data){
-            this.setStatus(false); 
+            // this.setStatus(false); 
             return false; 
         }
 
@@ -27,7 +27,6 @@ class Despesa {
     dataIsNumeric (...dados) {
         if (dados.length > 0) {
             for(const e in dados) {
-                // console.log(dados[e]); 
                 if (isNaN(parseInt(dados[e]))){
                     return false; 
                 }
@@ -38,24 +37,26 @@ class Despesa {
     
     validarData(dia, mes, ano) {
         
-        let data = new Date(); 
+        let d = new Date(); 
 
         if (!this.dataIsNumeric(dia, mes, ano)) {
-            let validacao = `A data não foi informada corretamente.\n
-                        Deseja cadastrar esta despesa na data de hoje? 
-                        (${new Date().toDateString()})`; 
-            if (confirm(validacao)) {
-                return data; 
+
+            // $('#alertaData').modal('show'); 
+            return false; 
+
+        } else {
+
+            d.setDate(dia); 
+            d.setMonth(mes-1); 
+            d.setFullYear(ano); 
+
+            if (d.getDate() != dia || d.getMonth() != mes-1 || d.getFullYear() != ano ) {
+                return false; 
             }
-        } else{
-            data.setDate(dia); 
-            data.setMonth(mes-1); 
-            data.setFullYear(ano); 
             
-            return data; 
+            return d; 
         }
         
-        return false; 
     }
 
     isEmpty(str) {
@@ -84,6 +85,7 @@ class Despesa {
 }
 
 class Database {
+
     constructor() {
         let id = localStorage.getItem('id'); 
         
@@ -91,10 +93,12 @@ class Database {
             localStorage.setItem('id', 0); 
         }
     }
+
     getNextId() {
         let nextId = localStorage.getItem('id'); 
         return parseInt(nextId) + 1; 
     }
+
     gravar(d) {
         let id = this.getNextId(); 
         localStorage.setItem('id', id); 
@@ -103,6 +107,17 @@ class Database {
 }
 
 const bd = new Database(); 
+
+function setToday() {
+    
+    let data = new Date(); 
+
+    document.getElementById('dia').value = data.getDate(); 
+    document.getElementById('mes').value = data.getMonth()+1; 
+    document.getElementById('ano').value = data.getFullYear(); 
+
+    return cadastrarDespesa(); 
+}
 
 function cadastrarDespesa() {
     
@@ -115,19 +130,22 @@ function cadastrarDespesa() {
     
     let despesa = new Despesa(dia.value, mes.value, ano.value, tipo.value, descricao.value, valor.value); 
     
-    if(despesa.getStatus()){
-        console.log(despesa); 
-        alert('Despesa cadastrada com sucesso'); 
-        dia.value = ''; 
-        mes.value = ''; 
-        ano.value = ''; 
-        tipo.value = ''; 
-        descricao.value = ''; 
-        valor.value = ''; 
-        // return bd.gravar(despesa); 
-    } else{
-        console.log('validacao: tem coisa vazia'); 
-        // return alert('Não foi possível criar a despesa.'); 
+    if(!despesa.getStatus()) {
+        
+        return $('#erroCadastro').modal('show'); 
+        
+    } else if (!despesa.validarData(dia.value, mes.value, ano.value)) {
+
+        return $('#alertaData').modal('show'); 
+
+    } else {
+
+        let elements = [dia, mes, ano, tipo, descricao, valor]; 
+        elements.forEach(e => e.value = ''); 
+        
+        bd.gravar(despesa); 
+
+        return $('#sucessoCadastro').modal('show'); 
     }
     
 }
