@@ -22,7 +22,7 @@ class Despesa {
         this.dia = data.getDate()
         this.tipo = tipo
         this.descricao = this.setDescricao(descricao)
-        this.valor = valor
+        this.valor = valor; 
     }
 
     setDescricao(descricao) {
@@ -146,6 +146,19 @@ class Database {
         return localStorage.setItem(id, JSON.stringify(d)); 
     }
 
+    remover(id) {
+        let c = confirm(`Deseja realmente excluir a despesa #${id}?`); 
+        if (c) {
+            localStorage.removeItem(id); 
+            return true; 
+        }
+        return false; 
+    }
+
+    setId(id) {
+        return localStorage.setItem('id', id); 
+    }
+
     /**
      * Método que retorna todos os registros armazenados em localStorage
      */
@@ -159,6 +172,8 @@ class Database {
             if (despesa === null) {
                 continue; 
             }
+            despesa.id = i; 
+            console.log(despesa); 
             arr.push(despesa); 
         }
         return arr; 
@@ -226,12 +241,13 @@ const bd = new Database();
  */
 function cadastrarDespesa() {
     
-    let dia = document.getElementById('dia'); 
-    let mes = document.getElementById('mes'); 
-    let ano = document.getElementById('ano'); 
-    let tipo = document.getElementById('tipo'); 
-    let descricao = document.getElementById('descricao'); 
-    let valor = document.getElementById('valor'); 
+    let campos = ['dia', 'mes', 'ano', 'tipo', 'descricao', 'valor']; 
+    let dados = []; 
+    campos.forEach(e => {
+        dados.push(document.getElementById(e)); 
+    }); 
+
+    let [dia, mes, ano, tipo, descricao, valor] = dados; 
     
     let despesa = new Despesa(dia.value, mes.value, ano.value, tipo.value, descricao.value, valor.value); 
     
@@ -281,7 +297,7 @@ function cadastrarDespesa() {
 
     // jQuery que exibe o modal
     return $('#alertaRegistro').modal('show'); 
-    
+
 }
 
 /**
@@ -299,25 +315,77 @@ function getDespesas(filter = undefined) {
     if (filter) {
         despesas = filter; 
         if (despesas.length == 0) {
-            let line = listaDespesas.insertRow(); 
-            let cell = line.insertCell(0); 
-            cell.colSpan = 5; 
-            return (
-                cell.innerHTML = 'Não há despesas correspondentes aos parâmetros solicitados.'
-            ); 
+            return  showAlert(
+                'Não há despesas correspondentes aos parâmetros solicitados.', 
+                'alert alert-danger'
+                ); 
         }
     } else {
         
         despesas = bd.getAllRegisters(); 
+        if (despesas.length === 0) {
+            document.getElementById('btnBuscaDespesa').setAttribute('disabled','disabled'); 
+            document.getElementById('btn_clear').style.display = 'none'; 
+            bd.setId(0); 
+            return  showAlert(
+                'Ainda não há despesas cadastradas.', 
+                'alert alert-primary'
+                ); 
+        }
     }
     despesas.forEach(e => {
         let line = listaDespesas.insertRow(); 
-        line.insertCell(0).innerHTML = `${e.dia}/${parseInt(e.mes)+1}/${e.ano}`; 
-        line.insertCell(1).innerHTML = getTypes(e.tipo); 
-        line.insertCell(2).innerHTML = e.descricao; 
-        line.insertCell(3).innerHTML = e.valor; 
+        line.insertCell(0).innerHTML = `<b>${e.id}</b>`; 
+        line.insertCell(1).innerHTML = `${e.dia}/${parseInt(e.mes)+1}/${e.ano}`; 
+        line.insertCell(2).innerHTML = getTypes(e.tipo); 
+        line.insertCell(3).innerHTML = e.descricao; 
+        // let n = new Number(e.valor); 
+        // line.insertCell(4).innerHTML = e.valor; 
+        line.insertCell(4).innerHTML = `R$ ${Number(e.valor).toFixed(2)}`; 
+        let cell = line.insertCell(5); 
+        let btn = document.createElement("button"); 
+        btn.className = 'btn btn-danger'; 
+        btn.id = `btn${e.id}`; 
+        btn.innerHTML = `<i class="fas fa-times"></i>`; 
+        btn.onclick = () => {
+            let id = e.id; 
+            let v = bd.remover(id); 
+            if(v) {
+                window.location.reload(); 
+            }
+        }
+        cell.append(btn); 
     });
     
+}
+
+function clearParms() {
+    let parms = ['ano', 'mes', 'dia', 'tipo', 'descricao', 'valor']; 
+
+    parms.forEach(element => {
+        document.getElementById(element).value = ''; 
+    });
+    document.getElementById('btn_clear').style.display = 'none'; 
+    
+    return getDespesas(); 
+}
+
+function showBtnClear() {
+    return (
+        document.getElementById('btn_clear').style.display = 'inline'
+    ); 
+}
+
+function showAlert(msg, classe) {
+    let line = listaDespesas.insertRow(); 
+    let cell = line.insertCell(0); 
+    cell.colSpan = 6; 
+    let divAlert = document.createElement("div"); 
+    divAlert.className = classe; 
+    divAlert.innerHTML = msg; 
+    return (
+        cell.append(divAlert)
+    ); 
 }
 
 /**
@@ -327,22 +395,16 @@ function getDespesas(filter = undefined) {
  */
 function pesquisarDespesa() {
     
-    let ano = document.getElementById('ano').value; 
-    let mes = document.getElementById('mes').value; 
-    let dia = document.getElementById('dia').value; 
-    let tipo = document.getElementById('tipo').value; 
-    let descricao = document.getElementById('descricao').value; 
-    let valor = document.getElementById('valor').value; 
+    let campos = ['dia', 'mes', 'ano', 'tipo', 'descricao', 'valor']; 
+    let dados = []; 
+    campos.forEach(e => {
+        dados.push(document.getElementById(e).value); 
+    }); 
+
+    let [dia, mes, ano, tipo, descricao, valor] = dados; 
 
     // Objeto literal de despesa passado como parâmetro
-    const despesa = {
-        "ano": ano, 
-        "mes": mes, 
-        "dia": dia, 
-        "tipo": tipo, 
-        "descricao": descricao, 
-        "valor": valor
-    }; 
+    const despesa = {ano, mes, dia, tipo, descricao, valor}; 
 
     return getDespesas(bd.searchRegistro(despesa)); 
 }
@@ -402,26 +464,6 @@ function getTypes(id) {
 }
 
 /**
- * Função que determina a quantidade de anos que ficarão
- * disponíveis para que as despesas sejam cadastradas
- * Quantidade de anos passada em parâmetro, 
- * desde o anoAtual até anoAtual-parametro
- */
-function years(quant = 1) {
-    // quant = (quant) ? quant : 1; 
-    let d = new Date(); 
-    let y = []; 
-    let i = 0; 
-    let q = quant; 
-    do {
-        y.push(d.getFullYear()-i); 
-        i++; 
-    } while(i < q); 
-
-    return y; 
-}
-
-/**
  * Retorna a listagem (array) dos meses
  * Refatorando arquivo html
  */
@@ -440,4 +482,24 @@ function months() {
         'Novembro', 
         'Dezembro'
     ]); 
+}
+
+/**
+ * Função que determina a quantidade de anos que ficarão
+ * disponíveis para que as despesas sejam cadastradas
+ * Quantidade de anos passada em parâmetro, 
+ * desde o anoAtual até anoAtual-parametro
+ */
+function years(quant = 1) {
+    // quant = (quant) ? quant : 1; 
+    let d = new Date(); 
+    let y = []; 
+    let i = 0; 
+    let q = quant; 
+    do {
+        y.push(d.getFullYear()-i); 
+        i++; 
+    } while(i < q); 
+
+    return y; 
 }

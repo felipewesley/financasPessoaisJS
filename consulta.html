@@ -78,7 +78,7 @@
 
                 <div class="row  mb-5">
                     <div class="col-md-8">
-                        <input type="text" class="form-control" placeholder="Pesquise por um termo ou trecho" id="descricao" />
+                        <input type="text" class="form-control" placeholder="Pesquise por um termo ou trecho da descrição" id="descricao" />
                     </div>
 
                     <div class="col-md-2">
@@ -86,7 +86,10 @@
                     </div>
 
                     <div class="col-md-2 d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" onclick="pesquisarDespesa();">
+                        <button type="button" class="btn btn-outline-primary" id="btn_clear" onclick="clearParms();" style="display: none;">
+                            Limpar
+                        </button>
+                        <button type="button" class="btn btn-primary" id="btnBuscaDespesa" onclick="pesquisarDespesa();showBtnClear();">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -100,6 +103,7 @@
                 <table class="table" >
                     <thead>
                         <tr>
+                            <th> # </th>
                             <th> Data </th>
                             <th> Tipo </th>
                             <th> Descrição</th>
@@ -112,7 +116,6 @@
                 </table>
             </div>
         </div>
-
             
     </div>
 
