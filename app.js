@@ -104,20 +104,24 @@ class Database {
         localStorage.setItem('id', id); 
         return localStorage.setItem(id, JSON.stringify(d)); 
     }
+
+    getRegistro() {
+        let id = localStorage.getItem('id'); 
+        let arr = []; 
+        for (let i = 0; i <= id; i++) {
+
+            let despesa = JSON.parse(localStorage.getItem(i)); 
+
+            if (despesa === null) {
+                continue; 
+            }
+            arr.push(despesa); 
+        }
+        return arr; 
+    }
 }
 
 const bd = new Database(); 
-
-function setToday() {
-    
-    let data = new Date(); 
-
-    document.getElementById('dia').value = data.getDate(); 
-    document.getElementById('mes').value = data.getMonth()+1; 
-    document.getElementById('ano').value = data.getFullYear(); 
-
-    return cadastrarDespesa(); 
-}
 
 function cadastrarDespesa() {
     
@@ -176,4 +180,91 @@ function cadastrarDespesa() {
 
     return $('#alertaRegistro').modal('show'); 
     
+}
+
+function types() {
+    return ([
+        'Alimentação', 
+        'Educação', 
+        'Lazer', 
+        'Saúde', 
+        'Transporte'
+    ]); 
+}
+
+function getTypes(id) {
+    id -= 1; 
+    let tipo = types(); 
+    for(let e in tipo) {
+        if (e == id) {
+            return tipo[e]; 
+        }
+    }
+    return 'Despesa'; 
+}
+
+function getDespesas() {
+    let despesas = bd.getRegistro(); 
+    let listaDespesas = document.getElementById('listaDespesas'); 
+
+    despesas.forEach(e => {
+        const line = listaDespesas.insertRow(); 
+        line.insertCell(0).innerHTML = `${e.dia}/${parseInt(e.mes)+1}/${e.ano}`; 
+        line.insertCell(1).innerHTML = getTypes(e.tipo); 
+        line.insertCell(2).innerHTML = e.descricao; 
+        line.insertCell(3).innerHTML = e.valor; 
+    });
+}
+
+function years(quant = 1) {
+    // quant = (quant) ? quant : 1; 
+    let d = new Date(); 
+    let y = []; 
+    let i = 0; 
+    let q = quant; 
+    do {
+        y.push(d.getFullYear()-i); 
+        i++; 
+    } while(i < q); 
+
+    return y; 
+}
+
+function months() {
+    return ([
+        'Janeiro', 
+        'Fevereiro', 
+        'Março', 
+        'Abril', 
+        'Maio', 
+        'Junho', 
+        'Julho', 
+        'Agosto', 
+        'Setembro', 
+        'Outubro', 
+        'Novembro', 
+        'Dezembro'
+    ]); 
+}
+
+function setValues() {
+    let ano = document.getElementById('ano'); 
+    let anoValues = years(3); 
+    anoValues.forEach(e => {
+        let op = new Option(e.toString(), e.toString()); 
+        ano.add(op); 
+    }); 
+    let mes = document.getElementById('mes'); 
+    let mesValues = months(); 
+    for(let e in mesValues){
+        let op = new Option(mesValues[e], (parseInt(e)+1).toString()); 
+        mes.add(op); 
+    }
+    let tipo = document.getElementById('tipo'); 
+    let tipoValues = types(); 
+    for(let e in tipoValues){
+        let op = new Option(tipoValues[e], e.toString()); 
+        tipo.add(op); 
+    }
+    return true; 
 }
