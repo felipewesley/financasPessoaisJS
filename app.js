@@ -193,7 +193,7 @@ class Database {
         }
 
         if (!this.isEmpty(registro.descricao)) {
-            despesas = despesas.filter(e => e.descricao == registro.descricao); 
+            despesas = despesas.filter(e => e.descricao.indexOf(registro.descricao) != -1); 
         }
 
         if (!this.isEmpty(registro.valor)) {
