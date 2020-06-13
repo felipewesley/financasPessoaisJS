@@ -1,7 +1,8 @@
+
 class Despesa {
 
-    constructor(dia, mes, ano, tipo, descricao, valor) {
-        
+    constructor(dia, mes, ano, tipo, descricao, valor) {    
+
         this.status = true; 
 
         if (!this.validarInformacoes(tipo, descricao, valor)) {
@@ -24,6 +25,10 @@ class Despesa {
         this.valor = valor
     }
 
+    /**
+     * Método que verifica se os valores informados 
+     * referentes a data são numéricos ou não
+     */
     dataIsNumeric (...dados) {
         if (dados.length > 0) {
             for(const e in dados) {
@@ -35,6 +40,11 @@ class Despesa {
         return true;
     }
     
+    /**
+     * Método que verifica se a data informada no construtor da classe
+     * corresponde a uma data válida. Caso a data informada seja inválida, 
+     * o objeto é instanciado com o atributo status = false
+     */
     validarData(dia, mes, ano) {
         
         let d = new Date(); 
@@ -59,13 +69,10 @@ class Despesa {
         
     }
 
-    isEmpty(str) {
-        if (str == ''.trim()) {
-            return true; 
-        }
-        return false; 
-    }
-
+    /**
+     * Método que verifica se os dados passados em parâmetro
+     * são vazios com base no método isEmpty desta mesma classe
+     */
     validarInformacoes(...dados) {
         for(const i in dados) {
             if(this.isEmpty(dados[i])) {
@@ -75,10 +82,28 @@ class Despesa {
         return true; 
     }
 
+    /**
+     * Método que verifica se um conteúdo é vazio
+     */
+    isEmpty(str) {
+        if (str == ''.trim()) {
+            return true; 
+        }
+        return false; 
+    }
+
+    /**
+     * Método acessor do atributo status
+     * Recupera valor de status
+     */
     getStatus() {
         return this.status; 
     }
 
+    /**
+     * Método acessor do atributo status
+     * Define um valor para status
+     */
     setStatus(status) {
         this.status = status; 
     }
@@ -86,7 +111,8 @@ class Despesa {
 
 class Database {
 
-    constructor() {
+    constructor() { 
+
         let id = localStorage.getItem('id'); 
         
         if(id === null){
@@ -94,18 +120,28 @@ class Database {
         }
     }
 
+    /**
+     * Gera o próximo id a ser armazenado em localStorage
+     */
     getNextId() {
         let nextId = localStorage.getItem('id'); 
         return parseInt(nextId) + 1; 
     }
 
+    /**
+     * Método que insere um registro em localStorage
+     * @param d Objeto Depesa no formato JSON
+     */
     gravar(d) {
         let id = this.getNextId(); 
         localStorage.setItem('id', id); 
         return localStorage.setItem(id, JSON.stringify(d)); 
     }
 
-    getRegistro() {
+    /**
+     * Método que retorna todos os registros armazenados em localStorage
+     */
+    getAllRegisters() {
         let id = localStorage.getItem('id'); 
         let arr = []; 
         for (let i = 0; i <= id; i++) {
@@ -119,10 +155,62 @@ class Database {
         }
         return arr; 
     }
+
+    /**
+     * Método que verifica se um conteúdo é vazio
+     */
+    isEmpty(str) {
+        if (str == ''.trim()) {
+            return true; 
+        }
+        return false; 
+    }
+
+    /**
+     * Método que recupera um registro específico
+     * com base no registro passado em parâmetro, 
+     * filtrando todos os registros existentes em localStorage
+     * @param registro Literal Object - Objeto do tipo Despesa
+     */
+    searchRegistro(registro) {
+        
+        let despesas = []; 
+        despesas = this.getAllRegisters(); 
+
+        if (!this.isEmpty(registro.ano)) {
+            despesas = despesas.filter(e => e.ano == registro.ano); 
+        }
+
+        if (!this.isEmpty(registro.mes)) {
+            despesas = despesas.filter(e => e.mes == parseInt(registro.mes)-1); 
+        }
+
+        if (!this.isEmpty(registro.dia)) {
+            despesas = despesas.filter(e => e.dia == registro.dia); 
+        }
+
+        if (!this.isEmpty(registro.tipo)) {
+            despesas = despesas.filter(e => e.tipo == registro.tipo); 
+        }
+
+        if (!this.isEmpty(registro.descricao)) {
+            despesas = despesas.filter(e => e.descricao == registro.descricao); 
+        }
+
+        if (!this.isEmpty(registro.valor)) {
+            despesas = despesas.filter(e => e.valor == registro.valor); 
+        }
+
+        return despesas; 
+
+    }
 }
 
 const bd = new Database(); 
 
+/**
+ * Função chamada no index ao cadastrar uma nova despesa
+ */
 function cadastrarDespesa() {
     
     let dia = document.getElementById('dia'); 
@@ -182,29 +270,12 @@ function cadastrarDespesa() {
     
 }
 
-function types() {
-    return ([
-        'Alimentação', 
-        'Educação', 
-        'Lazer', 
-        'Saúde', 
-        'Transporte'
-    ]); 
-}
-
-function getTypes(id) {
-    id -= 1; 
-    let tipo = types(); 
-    for(let e in tipo) {
-        if (e == id) {
-            return tipo[e]; 
-        }
-    }
-    return 'Despesa'; 
-}
-
+/**
+ * Função chamada no carregamento da página consulta
+ * Lista todos os registros
+ */
 function getDespesas() {
-    let despesas = bd.getRegistro(); 
+    let despesas = bd.getAllRegisters(); 
     let listaDespesas = document.getElementById('listaDespesas'); 
 
     despesas.forEach(e => {
@@ -216,37 +287,35 @@ function getDespesas() {
     });
 }
 
-function years(quant = 1) {
-    // quant = (quant) ? quant : 1; 
-    let d = new Date(); 
-    let y = []; 
-    let i = 0; 
-    let q = quant; 
-    do {
-        y.push(d.getFullYear()-i); 
-        i++; 
-    } while(i < q); 
+/**
+ * Função chamada na tela consulta ao consultar uma determinada despesa com base
+ * nos parâmetros fornecidos. A função recupera os dados fornecidos nos campos
+ */
+function pesquisarDespesa() {
+    
+    let ano = document.getElementById('ano').value; 
+    let mes = document.getElementById('mes').value; 
+    let dia = document.getElementById('dia').value; 
+    let tipo = document.getElementById('tipo').value; 
+    let descricao = document.getElementById('descricao').value; 
+    let valor = document.getElementById('valor').value; 
 
-    return y; 
+    // Objeto literal de despesa passado como parâmetro
+    const despesa = {
+        "ano": ano, 
+        "mes": mes, 
+        "dia": dia, 
+        "tipo": tipo, 
+        "descricao": descricao, 
+        "valor": valor
+    }; 
+
+    return bd.searchRegistro(despesa); 
 }
 
-function months() {
-    return ([
-        'Janeiro', 
-        'Fevereiro', 
-        'Março', 
-        'Abril', 
-        'Maio', 
-        'Junho', 
-        'Julho', 
-        'Agosto', 
-        'Setembro', 
-        'Outubro', 
-        'Novembro', 
-        'Dezembro'
-    ]); 
-}
-
+/**
+ * Função que gera os dados necessários ao cadastro de novas despesas
+ */
 function setValues() {
     let ano = document.getElementById('ano'); 
     let anoValues = years(3); 
@@ -267,4 +336,73 @@ function setValues() {
         tipo.add(op); 
     }
     return true; 
+}
+
+/**
+ * Função que retorna os tipos de despesas
+ * Novos tipos de despesas devem ser inseridos aqui
+ */
+function types() {
+    return ([
+        'Alimentação', 
+        'Educação', 
+        'Lazer', 
+        'Saúde', 
+        'Transporte'
+    ]); 
+}
+
+/**
+ * Retorna a string do tipo de uma despesa com base em seu id
+ */
+function getTypes(id) {
+    // id -= 1; 
+    let tipo = types(); 
+    for(let e in tipo) {
+        if (e == id) {
+            return tipo[e]; 
+        }
+    }
+    return 'Despesa'; 
+}
+
+/**
+ * Função que determina a quantidade de anos que ficarão
+ * disponíveis para que as despesas sejam cadastradas
+ * Quantidade de anos passada em parâmetro, 
+ * desde o anoAtual até anoAtual-parametro
+ */
+function years(quant = 1) {
+    // quant = (quant) ? quant : 1; 
+    let d = new Date(); 
+    let y = []; 
+    let i = 0; 
+    let q = quant; 
+    do {
+        y.push(d.getFullYear()-i); 
+        i++; 
+    } while(i < q); 
+
+    return y; 
+}
+
+/**
+ * Retorna a listagem (array) dos meses
+ * Refatorando arquivo html
+ */
+function months() {
+    return ([
+        'Janeiro', 
+        'Fevereiro', 
+        'Março', 
+        'Abril', 
+        'Maio', 
+        'Junho', 
+        'Julho', 
+        'Agosto', 
+        'Setembro', 
+        'Outubro', 
+        'Novembro', 
+        'Dezembro'
+    ]); 
 }
