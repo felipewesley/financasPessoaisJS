@@ -168,8 +168,7 @@ class Database {
 
     /**
      * Método que recupera um registro específico
-     * com base no registro passado em parâmetro, 
-     * filtrando todos os registros existentes em localStorage
+     * com base no registro passado em parâmetro
      * @param registro Literal Object - Objeto do tipo Despesa
      */
     searchRegistro(registro) {
@@ -266,30 +265,51 @@ function cadastrarDespesa() {
     document.getElementById('ModalBtn').className = btnClass; 
     document.getElementById('ModalBtn').innerHTML = btnContent; 
 
+    // jQuery que exibe o modal
     return $('#alertaRegistro').modal('show'); 
     
 }
 
 /**
  * Função chamada no carregamento da página consulta
- * Lista todos os registros
+ * Lista todos os registros se filter == undefined
+ * Se filter != undefined, a função retorna apenas os 
+ * registros filtrados de acordo com o registro em parâmetro
  */
-function getDespesas() {
-    let despesas = bd.getAllRegisters(); 
+function getDespesas(filter = undefined) {
+    
+    let despesas = []; 
     let listaDespesas = document.getElementById('listaDespesas'); 
+    listaDespesas.innerHTML = ''; 
 
+    if (filter) {
+        despesas = filter; 
+        if (despesas.length == 0) {
+            let line = listaDespesas.insertRow(); 
+            let cell = line.insertCell(0); 
+            cell.colSpan = 5; 
+            return (
+                cell.innerHTML = 'Não há despesas correspondentes aos parâmetros solicitados.'
+            ); 
+        }
+    } else {
+        
+        despesas = bd.getAllRegisters(); 
+    }
     despesas.forEach(e => {
-        const line = listaDespesas.insertRow(); 
+        let line = listaDespesas.insertRow(); 
         line.insertCell(0).innerHTML = `${e.dia}/${parseInt(e.mes)+1}/${e.ano}`; 
         line.insertCell(1).innerHTML = getTypes(e.tipo); 
         line.insertCell(2).innerHTML = e.descricao; 
         line.insertCell(3).innerHTML = e.valor; 
     });
+    
 }
 
 /**
  * Função chamada na tela consulta ao consultar uma determinada despesa com base
  * nos parâmetros fornecidos. A função recupera os dados fornecidos nos campos
+ * Esta função fornece seu retorno como parâmetro para a listagem de todos os registros
  */
 function pesquisarDespesa() {
     
@@ -310,11 +330,12 @@ function pesquisarDespesa() {
         "valor": valor
     }; 
 
-    return bd.searchRegistro(despesa); 
+    return getDespesas(bd.searchRegistro(despesa)); 
 }
 
 /**
  * Função que gera os dados necessários ao cadastro de novas despesas
+ * e parâmetros de listagem
  */
 function setValues() {
     let ano = document.getElementById('ano'); 
