@@ -21,8 +21,14 @@ class Despesa {
         this.mes = data.getMonth()
         this.dia = data.getDate()
         this.tipo = tipo
-        this.descricao = descricao
+        this.descricao = this.setDescricao(descricao)
         this.valor = valor
+    }
+
+    setDescricao(descricao) {
+        let str = new String(descricao); 
+
+        return str.toLowerCase(); 
     }
 
     /**
@@ -193,7 +199,13 @@ class Database {
         }
 
         if (!this.isEmpty(registro.descricao)) {
-            despesas = despesas.filter(e => e.descricao.indexOf(registro.descricao) != -1); 
+            despesas = despesas.filter(e => {
+                
+                let eStr = new String(e.descricao).toLowerCase(); 
+                let registroStr = new String(registro.descricao).toLowerCase(); 
+                
+                return (eStr.indexOf(registroStr) != -1); 
+            }); 
         }
 
         if (!this.isEmpty(registro.valor)) {
