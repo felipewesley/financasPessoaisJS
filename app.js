@@ -26,9 +26,11 @@ class Despesa {
     }
 
     setDescricao(descricao) {
-        let str = new String(descricao); 
-
-        return str.toLowerCase(); 
+        
+        let n1 = new String(descricao[0]).toUpperCase(); 
+        let n2 = new String(descricao).slice(1).toLowerCase(); 
+        
+        return n1.concat(n2); 
     }
 
     /**
