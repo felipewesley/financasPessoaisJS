@@ -528,10 +528,16 @@ function years(quant = 1) {
  */
 function visibleDespesaAuto() {
     
+    let btn = document.getElementById('btn_desp_auto'); 
+
+    if(btn != null) {
+        return false; 
+    }
     let nav = document.getElementById('menu_nav'); 
     
     let op = document.createElement("li"); 
     op.className = 'nav-item disabled'; 
+    op.id = 'btn_desp_auto'; 
     
     let link = document.createElement("a"); 
     link.className = 'nav-link'; 
