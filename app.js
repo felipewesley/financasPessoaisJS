@@ -1,4 +1,13 @@
+/**
+ * @file app.js
+ * @author Felipe Wesley
+ * @link https://github.com/felipewesley/financasPessoaisJS
+ */
 
+/**
+ * @class Despesa
+ * @description Responsável por representar a despesa cadastrada pelo usuário
+ */
 class Despesa {
 
     constructor(dia, mes, ano, tipo, descricao, valor) {    
@@ -16,7 +25,9 @@ class Despesa {
             // this.setStatus(false); 
             return false; 
         }
-
+        if(!this.status){
+            console.log('status é false'); 
+        }
         this.ano = data.getFullYear()
         this.mes = data.getMonth()
         this.dia = data.getDate()
@@ -117,6 +128,10 @@ class Despesa {
     }
 }
 
+/**
+ * @class Database
+ * @description Responsável pela persistência dos dados em localStorage
+ */
 class Database {
 
     constructor() { 
@@ -173,7 +188,6 @@ class Database {
                 continue; 
             }
             despesa.id = i; 
-            console.log(despesa); 
             arr.push(despesa); 
         }
         return arr; 
@@ -344,9 +358,11 @@ function getDespesas(filter = undefined) {
         line.insertCell(4).innerHTML = `R$ ${Number(e.valor).toFixed(2)}`; 
         let cell = line.insertCell(5); 
         let btn = document.createElement("button"); 
-        btn.className = 'btn btn-danger'; 
+        btn.className = 'btn btn-outline-danger'; 
         btn.id = `btn${e.id}`; 
-        btn.innerHTML = `<i class="fas fa-times"></i>`; 
+        // btn.innerHTML = `<i class="fas fa-times"></i>`; 
+        btn.innerHTML = `<i class="fa fa-trash"></i>`; 
+        btn.title = `Exluir #${e.id}`; 
         btn.onclick = () => {
             let id = e.id; 
             let v = bd.remover(id); 
@@ -502,4 +518,72 @@ function years(quant = 1) {
     } while(i < q); 
 
     return y; 
+}
+
+//-------------------------------------------------------------------------------------
+
+/**
+ * Atenção!
+ * As funções definidas daqui em diante são apenas para fins de testes
+ */
+function visibleDespesaAuto() {
+    
+    let nav = document.getElementById('menu_nav'); 
+    
+    let op = document.createElement("li"); 
+    op.className = 'nav-item disabled'; 
+    
+    let link = document.createElement("a"); 
+    link.className = 'nav-link'; 
+    link.href = '#'; 
+    link.onclick = () => despesaAutomatica(); 
+    link.innerHTML = 'Registrar despesas automaticamente'; 
+    
+    op.append(link); 
+    
+    return nav.append(op); 
+}
+
+function despesaAutomatica() {
+    
+    let c = confirm('Deseja realmente continuar?'); 
+    
+    if (!c) {
+        return false; 
+    }
+
+    localStorage.clear(); 
+
+    bd.setId(0); 
+
+    let obj = []; 
+
+    obj.push(new Despesa(9, 8, 2019, '4', 'Taxi para a rodoviária', '47')); 
+    obj.push(new Despesa(8, 1, 2019, '1', 'Início da faculdade', '897.75')); 
+    obj.push(new Despesa(30, 9, 2018, '2', 'PlayStation 3', '1100')); 
+    obj.push(new Despesa(21, 5, 2019, '3', 'Dentista', '90')); 
+    obj.push(new Despesa(13, 11, 2019, '0', 'Mc Donalds com os amigos', '42.70')); 
+    obj.push(new Despesa(3, 9, 2018, '3', 'Remédio pra dor de cabeça', '27.50')); 
+    obj.push(new Despesa(17, 4, 2018, '3', 'Exame de sangue', '120')); 
+    obj.push(new Despesa(12, 6, 2020, '4', 'Uber para a casa da namorada', '17.50')); 
+    obj.push(new Despesa(14, 8, 2019, '4', 'Taxi para entrevista de emprego na região metropolitana', '95.40')); 
+    obj.push(new Despesa(28, 12, 2018, '0', 'Jantar de ano novo', '75')); 
+    obj.push(new Despesa(12, 6, 2020, '0', 'Jantar de dia dos namorados', '160')); 
+    obj.push(new Despesa(13, 2, 2018, '1', 'Curso técnico informática', '270')); 
+    obj.push(new Despesa(19, 4, 2019, '2', 'Viagem de férias', '680')); 
+    obj.push(new Despesa(19, 5, 2019, '0', 'Mercado', '428')); 
+    obj.push(new Despesa(23, 12, 2018, '0', 'Almoço de natal com os pais', '93.22')); 
+    obj.push(new Despesa(1, 3, 2020, '3', 'Tratamento de espinhas', '690')); 
+    obj.push(new Despesa(4, 10, 2018, '4', 'Viagem de avião a trabalho', '723.32')); 
+    obj.push(new Despesa(12, 1, 2020, '2', 'Festa de aniversário', '280')); 
+    obj.push(new Despesa(15, 5, 2020, '1', 'Curso de JavaScript', '21.99'));
+    obj.push(new Despesa(17, 12, 2018, '1', 'Formatura do colégio', '320'));
+    obj.push(new Despesa(19, 7, 2018, '4', 'Uber para não se atrasar para o trabalho', '19.85')); 
+    obj.push(new Despesa(5, 6, 2020, '1', 'Curso de Nodejs e ReactJS', '57.98'));
+
+    obj.forEach(element => {
+        bd.gravar(element); 
+    });
+
+    return alert(`Total de ${obj.length} registros inseridos com sucesso`); 
 }

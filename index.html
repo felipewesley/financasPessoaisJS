@@ -14,6 +14,14 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
     <!-- Regras de negócio da aplicação -->
     <script src="./app.js"></script>
+    <style>
+        #desp_auto {
+            display: none;
+        }
+        #desp_auto:hover {
+            display: inline-block;
+        }
+    </style>
 </head>
 
 <body onload="setValues();">
@@ -21,16 +29,18 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-5">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="logo.png" width="50" height="35" alt="Orçamento pessoal">
+                <img src="logo.png" width="50" height="35" alt="Orçamento pessoal" onclick="visibleDespesaAuto()">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav mr-auto" id="menu_nav">
                     <li class="nav-item active"> <a class="nav-link" href="index.html"> Cadastro </a> </li>
                     <li class="nav-item"> <a class="nav-link" href="consulta.html"> Consulta </a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="graficos.html"> Gráfico de despesas <span class="badge badge-light"> Novo </span> </a> </li>
+                    
                 </ul>
             </div>
         </div>
