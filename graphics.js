@@ -62,14 +62,6 @@ am4core.ready(() => {
             this.transporte = 0
         }
     }
-    // let obj = {
-    //     "year": null, 
-    //     "alimentacao": 0, 
-    //     "educacao": 0, 
-    //     "lazer": 0, 
-    //     "saude": 0, 
-    //     "transporte": 0
-    // }
 
     for (const k in anos) {
         
@@ -108,35 +100,6 @@ am4core.ready(() => {
         return chart.data.push(element); 
     });
 
-    // Add data
-    /*
-    chart.data = [ {
-        "year": "2003",
-        "europe": 2.5,
-        "namerica": 2.5,
-        "asia": 2.1,
-        "lamerica": 1.2,
-        "meast": 0.2,
-        "africa": 0
-    }, {
-        "year": "2004",
-        "europe": 2.6,
-        "namerica": 2.7,
-        "asia": 2.2,
-        "lamerica": 1.3,
-        "meast": 0.3,
-        "africa": 0.1
-    }, {
-        "year": "2005",
-        "europe": 2.8,
-        "namerica": 2.9,
-        "asia": 2.4,
-        "lamerica": 1.4,
-        "meast": 0.3,
-        "africa": 4.1
-    } ];
-    */
-
     // Create axes
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = "year";
@@ -148,7 +111,6 @@ am4core.ready(() => {
 
     let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.min = 0;
-    // valueAxis.title.text = "Expenditure (M)";
     valueAxis.title.text = "Gasto total (R$)";
 
     // Create series
@@ -161,13 +123,6 @@ am4core.ready(() => {
         series.stacked = stacked;
         series.columns.template.width = am4core.percent(95);
     }
-
-    // createSeries("europe", "Europe", false);
-    // createSeries("namerica", "North America", true);
-    // createSeries("asia", "Asia", false);
-    // createSeries("lamerica", "Latin America", true);
-    // createSeries("meast", "Middle East", true);
-    // createSeries("africa", "Africa", true);
 
     createSeries("alimentacao", "Alimentação", false);
     createSeries("educacao", "Educação", true);
