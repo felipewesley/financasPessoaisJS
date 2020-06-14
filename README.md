@@ -1,2 +1,3 @@
 # financasPessoaisJS
-App de orçamento e finanças pessoais desenvolvido em JavaScript com front utilizando Bootstrap, biblioteca de ícones e fontes Font Awesome e armazenamento de dados no formato JSON em Local Storage. 
+App simples de controle de despesas pessoais. Desenvolvido em JavaScript, pequenas funções de jQuery, front-end com Bootstrap, biblioteca de ícones Font Awesome, gráficos dinâmicos utilizando amCharts(JS) e persistência de dados em JSON no LocalStorage do navegador. 
+Recomenda-se utilização do navegador Google Chrome (ambiente de desenvolvimento e testes). 
