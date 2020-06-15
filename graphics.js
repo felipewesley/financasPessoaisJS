@@ -72,23 +72,23 @@ am4core.ready(() => {
             if (objetoAno.year == element.ano) {
                 switch (parseInt(element.tipo)) {
                     case 0:
-                        objetoAno.alimentacao += parseInt(element.valor); 
+                        objetoAno.alimentacao += parseFloat(element.valor); 
                         break;
                     case 1:
-                        objetoAno.educacao += parseInt(element.valor); 
+                        objetoAno.educacao += parseFloat(element.valor); 
                         break;
                     case 2: 
-                        objetoAno.lazer += parseInt(element.valor); 
+                        objetoAno.lazer += parseFloat(element.valor); 
                         break;
                     case 3: 
-                        objetoAno.saude += parseInt(element.valor); 
+                        objetoAno.saude += parseFloat(element.valor); 
                         break;
                     case 4:
-                        objetoAno.transporte += parseInt(element.valor); 
+                        objetoAno.transporte += parseFloat(element.valor); 
                         break;
                 }
             }
-        });
+        }); 
         registrosAno.push(objetoAno); 
     }
 

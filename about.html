@@ -1,0 +1,91 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Sobre este projeto </title>
+    
+    <!-- Folha de estilos Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Scripts Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script> -->
+    
+    <!-- Carrega icone de tecnologias -->
+    <script src="./icons_script.js"></script>
+    
+</head>
+
+<body onload="setContent();">
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-5">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="logo.png" width="50" height="35" alt="Orçamento pessoal" onclick="visibleDespesaAuto()">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto" id="menu_nav">
+                    <li class="nav-item active"> <a class="nav-link" href="#"> Sobre </a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="cadastro.html"> Cadastro </a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="index.html"> Consulta </a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="graficos.html"> Gráfico de despesas <span class="badge badge-light"> Novo </span> </a> </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="jumbotron">
+            <h1 class="display-4"> Sobre este projeto </h1>
+            <p class="lead">
+                Este projeto foi desenvolvido durante o processo de aprendizado da linguagem de programação <b>JavaScript</b>. Trata-se de um projeto sem fins lucrativos, com a exclusiva finalidade de aplicar um pouco das diversas funcionalidades que o JavaScript oferece para desenvolvimento web. 
+            </p>
+            <hr class="my-4">
+            <p>
+                Além do JavaScript, este projeto também utilizou algumas outras tecnologias. 
+            </p>
+            <p>
+                <button class="btn btn-primary btn-lg" type="button" data-toggle="collapse" data-target="#collapseTech" aria-expanded="false" aria-controls="collapseTech">
+                    Ver tecnologias utilizadas?
+                </button>
+            </p>
+            <div class="collapse" id="collapseTech">
+                <div class="card card-body" id="lista_tech">
+                </div>
+            </div>
+            <hr class="my-4">
+            <p class="lead">
+                Obrigado por visitar este aplicativo. <br>
+                Se desejar, você pode enviar um feedback via e-mail <a href="mailto:fe.wesleybasso@gmail.com?subject=Feedback%20financasPessoaisJS">clicando aqui</a>. 
+            </p>
+        </div>
+
+    </div>
+
+    <div class="footer" style="width: 100%;">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <p class="lead text-center">
+                    Desenvolvido por: Felipe Wesley - 2020
+                    <p class="text-center">
+                        <a href="https://github.com/felipewesley/financasPessoaisJS" class="btn btn-dark btn-lg" title="Ir para GitHub" target="_blank">
+                            <i class="fa fa-github"></i>
+                            Ver projeto no GitHub
+                        </a>
+                    </p>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
